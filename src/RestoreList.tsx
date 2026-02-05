@@ -7,11 +7,11 @@ export interface User {
 
 interface Props {
   users: User[]
-  onDelete: (index: number) => void
+  onRestore: (index: number) => void
 }
 
-function UserList({ users, onDelete }: Props) {
-  if (users.length === 0) return <p>ยังไม่มีผู้สมัคร</p>
+function RestoreList({ users, onRestore }: Props) {
+  if (users.length === 0) return <p>ถังขยะว่าง</p>
 
   return (
     <ul className="user-list">
@@ -22,11 +22,11 @@ function UserList({ users, onDelete }: Props) {
           <span>Age: {u.age}</span>
           <span className="role">{u.role}</span>
 
-          <button onClick={() => onDelete(i)}>🗑 ลบ</button>
+          <button onClick={() => onRestore(i)}>♻️ กู้คืน</button>
         </li>
       ))}
     </ul>
   )
 }
 
-export default UserList
+export default RestoreList

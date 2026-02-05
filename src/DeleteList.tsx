@@ -10,8 +10,8 @@ interface Props {
   onDelete: (index: number) => void
 }
 
-function UserList({ users, onDelete }: Props) {
-  if (users.length === 0) return <p>ยังไม่มีผู้สมัคร</p>
+function DeleteList({ users, onDelete }: Props) {
+  if (users.length === 0) return <p>ยังไม่มีข้อมูลให้ลบ</p>
 
   return (
     <ul className="user-list">
@@ -29,4 +29,4 @@ function UserList({ users, onDelete }: Props) {
   )
 }
 
-export default UserList
+export default DeleteList

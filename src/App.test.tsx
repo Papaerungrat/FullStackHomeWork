@@ -1,34 +1,48 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen, fireEvent } from "@testing-library/react";
-import App from "./App.tsx";
+import App from "./App";
 
-describe("App", () => {
+describe("App Integration", () => {
   beforeEach(() => {
     cleanup();
   });
 
-  it("adds user and displays in list", () => {
+  it("เพิ่มผู้สมัคร → ลบ → ไปถังขยะ → กู้คืนกลับมา", async () => {
     render(<App />);
 
-    fireEvent.change(screen.getByRole("textbox", { name: "fullname" }), {
-      target: { value: "pp" },
+    fireEvent.change(screen.getByPlaceholderText("Full Name"), {
+      target: { value: "Bob" },
     });
 
-    fireEvent.change(screen.getByRole("textbox", { name: "email" }), {
-      target: { value: "t@gmail.com" },
+    fireEvent.change(screen.getByPlaceholderText("Email"), {
+      target: { value: "bob@test.com" },
     });
 
-    fireEvent.change(screen.getByRole("spinbutton", { name: "age" }), {
-      target: { value: "10" },
+    fireEvent.change(screen.getByPlaceholderText("Age (10-99)"), {
+      target: { value: "30" },
     });
 
-    fireEvent.change(screen.getByRole("combobox", { name: "role" }), {
+    fireEvent.change(screen.getByRole("combobox"), {
       target: { value: "front-end" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "submit" }));
+    fireEvent.click(screen.getByText("ส่ง"));
 
-    expect(screen.getByText(/pp/)).toBeDefined();
-    expect(screen.getByText(/t@gmail.com/)).toBeDefined();
+    expect(await screen.findByText("Bob")).toBeDefined();
+
+    fireEvent.click(screen.getByText("🗑 ลบ"));
+
+    expect(screen.queryByText("🗑 ลบ")).toBeNull();
+
+    const restoreButton = screen.getByRole("button", {
+      name: /กู้คืน/,
+    });
+    
+    expect(restoreButton).toBeDefined();
+    expect(screen.getAllByText("Bob").length).toBe(1);
+
+    fireEvent.click(restoreButton);
+    expect(await screen.findByText("Bob")).toBeDefined();
+    expect(await screen.findByText("🗑 ลบ")).toBeDefined();
   });
 });
